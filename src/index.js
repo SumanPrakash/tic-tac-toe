@@ -53,6 +53,7 @@ class Game extends React.Component {
                 },
             ],
             xIsNext: true,
+            stepNumber: 0,
         };
     }
 
@@ -71,19 +72,27 @@ class Game extends React.Component {
                     squares: squares,
                 },
             ]),
+            stepNumber: history.length,
             xIsNext: !this.state.xIsNext,
+        });
+    }
+
+    jumpTo(step) {
+        this.setState({
+            stepNumber: step,
+            xIsNext: step % 2 === 0,
         });
     }
 
     render() {
         const history = this.state.history;
-        const current = history[history.length - 1];
+        const current = history[this.state.stepNumber];
         const winner = calculateWinner(current.squares);
 
         const moves = history.map((step, move) => {
             const desc = move ? "Go to move #" + move : "Go to game start";
             return (
-                <li>
+                <li key={move}>
                     <button onClick={() => this.jumpTo(move)}>{desc}</button>
                 </li>
             );
@@ -140,3 +149,13 @@ function calculateWinner(squares) {
     }
     return null;
 }
+
+/**
+ * TODO
+ * Display the location for each move in the format (col, row) in the move history list.
+Bold the currently selected item in the move list.
+Rewrite Board to use two loops to make the squares instead of hardcoding them.
+Add a toggle button that lets you sort the moves in either ascending or descending order.
+When someone wins, highlight the three squares that caused the win.
+When no one wins, display a message about the result being a draw.
+ */
